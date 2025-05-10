@@ -1,0 +1,43 @@
+workflows:
+  ios-release-build:
+    name: iOS Release IPA Build 
+    instance_type: mac_mini_m1 
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Set up keychain
+        script: | # Script block starts
+          keychain initialize # Indented correctly
+      - name: Install App Store Connect API key (if distributing to TestFlight/App Store via Codemagic)
+        script: | # Script block starts
+          echo "Skipping App Store Connect API key installation for manual IPA download" # INDENT THIS LINE AND THE COMMENTED ONES
+          # keychain add-api-key --key-name "YourKeyNameInCodemagic" \
+          #   --issuer-id "YOUR_ISSUER_ID" \
+          #   --key-id "YOUR_KEY_ID" \
+          #   --key "$(cat /tmp/codemagic_api_key.p8)"
+      - name: Get Flutter packages
+        script: | # Script block starts
+          flutter packages pub get # Indented correctly
+      - name: Install iOS dependencies
+        script: | # Script block starts
+          cd ios && pod install && cd .. # Indented correctly
+      - name: Set up code signing settings on Codemagic
+        script: | # Script block starts 
+          keychain use-login
+          xcode-project use-profiles # Indented correctly
+      - name: Flutter build IPA
+        script: | # Script block starts
+          flutter build ipa --release --export-method app-store # Indented correctly
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - $HOME/Library/Developer/Xcode/Archives/**/*.xcarchive
+    publishing:
+      email:
+        recipients:
+          - your_email@example.com
+        notify:
+          success: true
+          failure: true 
