@@ -1,45 +1,78 @@
 # Miscellaneous
 *.class
+*.lock
 *.log
 *.pyc
 *.swp
 .DS_Store
 .atom/
-.build/
 .buildlog/
 .history
-.svn/
-.swiftpm/
-migrate_working_dir/
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
 .idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+.<y_bin_411>tool_code
+# Flutter/Dart packages
 .dart_tool/
+.packages
+build/
+
+# Flutter/Dart IDE specific files
 .flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
-.pub/
-/build/
 
-# Symbolication related
-app.*.symbols
+# Android files
+android/app/src/main/assets/flutter_assets/kernel_blob.bin # If you build for Android
+android/app/src/main/assets/flutter_assets/isolate_snapshot_data # If you build for Android
+android/app/src/main/assets/flutter_assets/vm_snapshot_data # If you build for Android
+android/key.properties
+android/.gradle/
+android/local.properties
+android/app/build/
+android/app/release/
+android/app/profile/
+android/app/debug/
+android/app/intermediates/
+android/app/outputs/
+android/app/generated/
+*.apk
+*.aab
 
-# Obfuscation related
-app.*.map.json
+# iOS files
+ios/Flutter/App.framework
+ios/Flutter/engine.cC
+ios/Flutter/flutter_assets/kernel_blob.bin
+ios/Flutter/flutter_assets/isolate_snapshot_data
+ios/Flutter/flutter_assets/vm_snapshot_data
+ios/Flutter/Generated.xcconfig
+ios/Pods/
+ios/Runner/GeneratedPluginRegistrant.*
+ios/Runner.xcworkspace/xcshareddata/
+ios/Runner.xcworkspace/xcuserdata/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/DerivedData/
+# If you use different Xcode schemes, add them:
+# ios/Flutter/Debug.xcconfig
+# ios/Flutter/Release.xcconfig
+*.mobileprovision
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# macOS files
+macos/Flutter/ephemeral/
+macos/.symlinks/
+
+# Windows files
+windows/flutter/ephemeral/
+windows/.symlinks/
+
+# Linux files
+linux/flutter/ephemeral/
+linux/.symlinks/
+
+# Web files
+web/build/
+
+# VS Code
+.vscode/
+
+# Codemagic
+secrets.json # If you ever store secrets locally for Codemagic testing (don't commit real secrets!)
