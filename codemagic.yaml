@@ -49,7 +49,7 @@ workflows:
 
       - name: Flutter build IPA
         script: | 
-          flutter build ipa --release --export-method app-store 
+          flutter build ipa --release --export-method ad-hoc
           # Ensure --export-method matches your provisioning profile type
           # (app-store, ad-hoc, development)
     artifacts:
