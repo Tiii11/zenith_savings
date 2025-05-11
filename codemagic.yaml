@@ -1,43 +1,66 @@
 workflows:
   ios-release-build:
     name: iOS Release IPA Build 
-    instance_type: mac_mini_m1 
-    max_build_duration: 60
+    instance_type: mac_mini_m1 # Or your preferred instance
+    max_build_duration: 90 # Increased slightly just in case
     environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
+      flutter: stable # Example: 3.19.6 (Check latest stable or use 'stable')
+      xcode: latest   # Example: 15.3 (Ensure compatibility with Flutter version)
+      cocoapods: default # Or specify a version if needed, e.g., 1.15.2
     scripts:
       - name: Set up keychain
-        script: | # Script block starts
-          keychain initialize # Indented correctly
-      - name: Install App Store Connect API key (if distributing to TestFlight/App Store via Codemagic)
-        script: | # Script block starts
-          echo "Skipping App Store Connect API key installation for manual IPA download" # INDENT THIS LINE AND THE COMMENTED ONES
-          # keychain add-api-key --key-name "YourKeyNameInCodemagic" \
-          #   --issuer-id "YOUR_ISSUER_ID" \
-          #   --key-id "YOUR_KEY_ID" \
-          #   --key "$(cat /tmp/codemagic_api_key.p8)"
+        script: | 
+          keychain initialize
+      # - name: Install App Store Connect API key (Optional)
+      #   script: | # ...
+
+      - name: Clean Flutter (Optional, but can resolve caching issues)
+        script: |
+          flutter clean
+
       - name: Get Flutter packages
-        script: | # Script block starts
-          flutter packages pub get # Indented correctly
-      - name: Install iOS dependencies
-        script: | # Script block starts
-          cd ios && pod install && cd .. # Indented correctly
+        script: | 
+          flutter pub get
+
+      - name: Flutter Doctor (for debugging output)
+        script: |
+          flutter doctor -v
+
+      - name: Precache iOS build artifacts (Ensures Flutter iOS tools are ready)
+        script: |
+          flutter precache --ios --force # --force to ensure it runs
+
+      - name: Update CocoaPods repositories (Ensures pod specs are up-to-date)
+        script: |
+          pod repo update
+
+      - name: Install iOS dependencies (Pod Install)
+        script: | 
+          cd ios
+          pod install # Removed --repo-update here as it's done above
+          cd ..
+          # Alternative: If still issues, try:
+          # arch -x86_64 pod install # If on M1/M2 and issues with ARM cocoapods
+
       - name: Set up code signing settings on Codemagic
-        script: | # Script block starts 
+        script: |  
           keychain use-login
-          xcode-project use-profiles # Indented correctly
+          xcode-project use-profiles
+
       - name: Flutter build IPA
-        script: | # Script block starts
-          flutter build ipa --release --export-method app-store # Indented correctly
+        script: | 
+          flutter build ipa --release --export-method app-store 
+          # Ensure --export-method matches your provisioning profile type
+          # (app-store, ad-hoc, development)
     artifacts:
       - build/ios/ipa/*.ipa
       - $HOME/Library/Developer/Xcode/Archives/**/*.xcarchive
+      # Add Podfile.lock to artifacts for debugging if issues persist
+      - ios/Podfile.lock 
     publishing:
       email:
         recipients:
-          - your_email@example.com
+          - tiitiixyou@gmail.com # Replace with your email
         notify:
           success: true
-          failure: true 
+          failure: true
